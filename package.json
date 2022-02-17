@@ -4,7 +4,7 @@
   "description": "A CLI program for poker game",
   "main": "bin/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "repository": {
@@ -21,8 +21,14 @@
   },
   "homepage": "https://github.com/carat25/Poker_Hand_Sorter#readme",
   "dependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
     "commander": "^9.0.0",
     "lodash": "^4.17.21",
     "yargs": "13.2"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
   }
 }
