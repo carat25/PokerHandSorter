@@ -4,7 +4,6 @@ const readline = require("readline");
 const _ = require("lodash");
 const { test } = require("./poker");
 
-
 //this checks the user input, if the input is empty or "",
 //it then calls the close function which proceeds checking the user inputs
 const prompts = readline.createInterface(process.stdin, process.stdout);
@@ -22,7 +21,6 @@ prompts.on("close", () => {
   let player2WinCount = [];
 
   hands.map((hand) => {
-
     let getPlayer1Cards = getCardEquivalent(hand.player1Cards);
     let getPlayer2Cards = getCardEquivalent(hand.player2Cards);
 
@@ -148,7 +146,6 @@ const calculatePlayer1Score = (hand) => {
     let pairValue1 = findDuplicateItems(getCardEquivalent(hand.player1Cards));
     player1Score = combination.pair + parseInt(pairValue1);
     player1ScoreCard.push(player1Score);
-
   } else {
     let getCardValue = getCardEquivalent(hand.player1Cards);
     player1Score = isAHighCard(getCardValue);
@@ -199,6 +196,13 @@ const processHands = (inputsArr) => {
    * user input cards, processHands will go through each card value,
    * split them by space, separate them by assigning 1st element to cardValue and second element to suitValue
    * then we split the cards by 5, 1st half belongs to player1 and the rest are for player2
+   * will look like this for each player [
+  { value: '2', suit: 'S' },
+  { value: 'K', suit: 'D' },
+  { value: 'T', suit: 'H' },
+  { value: '9', suit: 'H' },
+  { value: '8', suit: 'H' }
+]
    */
   return inputsArr.map((arr) => {
     const splitArr = arr.split(" ").map((element) => {
@@ -210,7 +214,7 @@ const processHands = (inputsArr) => {
 
     const player1Cards = splitArr.slice(0, 5);
     const player2Cards = splitArr.slice(5, 10);
-
+ 
     return { player1Cards, player2Cards };
   });
 };
@@ -222,11 +226,11 @@ const isARoyalFlush = (cards) => {
 
   //check the cards on hand is same as royalCards
   let royalCards = ["T", "J", "Q", "K", "A"];
-  let checkCardValues = getCardValues(cards);
-  let test = royalCards.every((item) => checkCardValues.includes(item));
+  let getCards = getCardValues(cards);
+  let checkCardValues = royalCards.every((item) => getCards.includes(item));
 
   //if suitsCount = 5 and cards on Hand = royalCards, then it is a royal flush
-  if (isAFlush(cards) && test === true) {
+  if (isAFlush(cards) && checkCardValues === true) {
     return true;
   } else {
     return false;
@@ -238,6 +242,7 @@ const isStraightFlush = (cards) => {
    * All five cards in consecutive value order, with the same suit
    */
 
+  //check if cards are in the same suit and in consecutive order
   if (isAFlush(cards) && checkCardsIfConsecutiveOrder(cards) === true) {
     return true;
   } else {
@@ -253,6 +258,7 @@ const isFourOfAKind = (cards) => {
   //counting the number of occurences for each card value
   const fourCount = cardCount(cards);
 
+  //check if one of the card values count up to 4
   if (Object.values(fourCount).includes(4)) {
     return true;
   } else {
@@ -265,6 +271,7 @@ const isFullHouse = (cards) => {
    * Three of a kind and a Pair
    */
 
+  //check if one of the card values count up to 3 and the rest of the cards is a pair
   if (isThreeOfAKind(cards) && isAPair(cards)) {
     return true;
   } else {
@@ -349,11 +356,13 @@ const isAHighCard = (cards) => {
    * Highest value card
    */
 
+  //find the highest number within the card array and declare the highest card
   return cards.reduce((a, b) => {
     return Math.max(a, b);
   }, -Infinity);
 };
 
+//find the next highest value in the card array
 const nextHighestCard = (cards) => {
   let highestNum = isAHighCard(cards);
   let nextHighestNumArr = cards.filter((value) => {
@@ -364,6 +373,7 @@ const nextHighestCard = (cards) => {
   return nextHighestNum;
 };
 
+//find the third highest value in the card array
 const thirdHighestCard = (cards) => {
   let highestNum = isAHighCard(cards);
   let nextHighestNum = nextHighestCard(cards);
@@ -374,6 +384,7 @@ const thirdHighestCard = (cards) => {
   return thirdHighestNum;
 };
 
+//find the fourth highest value in the card array
 const fourthHighestCard = (cards) => {
   let highestNum = isAHighCard(cards);
   let nextHighestNum = nextHighestCard(cards);
@@ -418,16 +429,18 @@ const getCardEquivalent = (cards) => {
   });
 };
 
+//function to sort the cards array in ascending order
 const sortCards = (cards) => {
   return getCardEquivalent(cards).sort((a, b) => {
     return a - b;
   });
 };
 
+//function to check if cards are in consecutive order
 const checkCardsIfConsecutiveOrder = (cards) => {
   let sortedCards = sortCards(cards);
 
-  //calculate the difference of the elements in an array and replace with true/false
+  
   let newArray = sortedCards.slice(1).map((item, index) => {
     let newItem = item - sortedCards[index];
     if (newItem === 1) {
@@ -447,6 +460,7 @@ const checkCardsIfConsecutiveOrder = (cards) => {
 //   return cards.reduce((partialSum, a) => partialSum + a, 0);
 // };
 
+//function to find the duplicate values in card array
 const findDuplicateItems = (cards) => {
   let duplicate = cards.filter(
     (item, index, arr) => arr.indexOf(item) !== index
