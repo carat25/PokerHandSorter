@@ -80,14 +80,18 @@ prompts.on("close", () => {
       player1WinCount.push(0);
     }
 
-    const player1NumWins = player1WinCount.filter((x) => {
-      return x === 1;
-    }).length;
-    const player2NumWins = player2WinCount.filter((value) => {
-      return value === 1;
-    }).length;
+    const initialValue = 0;
+    const player1NumWins = player1WinCount.reduce((previousValue, currentValue) =>
+    previousValue + currentValue, initialValue
+  );
+
+    const player2NumWins = player2WinCount.reduce((previousValue, currentValue) =>
+      previousValue + currentValue, initialValue
+    );
 
     console.log(`Player 1: ${player1NumWins} hands`);
     console.log(`Player 2: ${player2NumWins} hands`);
+  
   });
+ 
 });

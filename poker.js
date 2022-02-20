@@ -45,11 +45,13 @@ const processHands = (inputsArr) => {
   return inputsArr.map((arr) => {
     const splitArr = arr.split(" ").map((element) => {
       return {
+        //split the user input (e.g. 9H) and set first string to be "value" and second string to be the "suit"
         value: element.substring(0, 1),
         suit: element.substring(1, 2),
       };
     });
-
+    //there's always 10 cards in each data input. Here we are dividing the data to 2 groups,
+    //first half belongs to player 1 and second half belongs to player 2
     const player1Cards = splitArr.slice(0, 5);
     const player2Cards = splitArr.slice(5, 10);
 
@@ -329,9 +331,11 @@ const cardCount = (cards) => {
 //function to capture the card values and push them into an array of card values
 const getCardValues = (cards) => {
   let cardValue = [];
+
   cards.map((object) => {
     return cardValue.push(object.value);
   });
+
   return cardValue;
 };
 
@@ -347,9 +351,15 @@ const getCardEquivalent = (cards) => {
 
 //function to sort the cards array in ascending order
 const sortCards = (cards) => {
-  return getCardEquivalent(cards).sort((a, b) => {
+  console.log("I AM CARDS", cards);
+  let x = getCardEquivalent(cards).sort((a, b) => {
     return a - b;
+    // return getCardEquivalent(cards).sort((a, b) => {
+
+    // return a - b;
   });
+  console.log("I AM NUMBER", x);
+  return x;
 };
 
 //function to check if cards are in consecutive order
@@ -388,4 +398,9 @@ module.exports = {
   nextHighestCard,
   thirdHighestCard,
   fourthHighestCard,
+  suitsCount,
+  cardCount,
+  getCardValues,
+  sortCards,
+  checkCardsIfConsecutiveOrder,
 };
