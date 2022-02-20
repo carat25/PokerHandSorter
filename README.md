@@ -1,9 +1,5 @@
 # PokerHandSorter
-
-
-
-
-
+A CLI program created using node.js and javascript.
 
 # Running the CLI program
 To run the CLI program, check that you are in the right directory. Then type "node index.js" in your terminal.
