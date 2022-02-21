@@ -9,8 +9,8 @@ const {
   checkCardsIfConsecutiveOrder,
 } = require("./poker");
 
-describe("Poker Hand Sorter tests", () => {
-  //suitsCount test
+describe("Suit occurrences check", () => {
+  
   it("Calculate number of suit occurrences if suits are exactly the same", () => {
     expect(
       suitsCount([
@@ -34,8 +34,10 @@ describe("Poker Hand Sorter tests", () => {
       ])
     ).toMatchObject({ C: 3, D: 2 });
   });
+});
 
-  //cardCount test
+describe("Card count check", () => {
+  
   it("Calculate number of card occurrences if cards are not the same", () => {
     expect(
       cardCount([
@@ -60,55 +62,99 @@ describe("Poker Hand Sorter tests", () => {
     ).toMatchObject({ 5: 2, Q: 3 });
   });
 
-  //getCardValues test
-  it("Get the card values and put them in a separate array", () => {
-    expect(
-      getCardValues([
-        { value: "4", suit: "D" },
-        { value: "2", suit: "D" },
-        { value: "7", suit: "H" },
-        { value: "8", suit: "D" },
-        { value: "3", suit: "C" },
-      ])
-    ).toMatchObject(["4", "2", "7", "8", "3"]);
+  describe("Card count check", () => {
+
+    it("Get the card values and put them in a separate array", () => {
+      expect(
+        getCardValues([
+          { value: "4", suit: "D" },
+          { value: "2", suit: "D" },
+          { value: "7", suit: "H" },
+          { value: "8", suit: "D" },
+          { value: "3", suit: "C" },
+        ])
+      ).toMatchObject(["4", "2", "7", "8", "3"]);
+    });
   });
 
-  //getCardEquivalent test
-  it("Get the equivalent of the card values and put them in an array", () => {
-    expect(
-      getCardEquivalent([
-        { value: "T", suit: "D" },
-        { value: "6", suit: "C" },
-        { value: "2", suit: "C" },
-        { value: "T", suit: "C" },
-        { value: "K", suit: "S" },
-      ])
-    ).toMatchObject([10, 6, 2, 10, 13]);
+  describe("Get card value euivalent from list of cards object", () => {
+    it("Get the equivalent of the card values and put them in an array", () => {
+      expect(
+        getCardEquivalent([
+          { value: "T", suit: "D" },
+          { value: "6", suit: "C" },
+          { value: "2", suit: "C" },
+          { value: "T", suit: "C" },
+          { value: "K", suit: "S" },
+        ])
+      ).toEqual([10, 6, 2, 10, 13]);
+    });
   });
 
-  //sort card test
-  it("Sort an array of integers when integers are not the same", () => {
+  describe("Sort array values", () => {
+    it("Sort an array of integers when integers are not the same", () => {
+      expect(
+        sortCards([
+          { value: "A", suit: "D" },
+          { value: "7", suit: "D" },
+          { value: "K", suit: "H" },
+          { value: "Q", suit: "H" },
+          { value: "T", suit: "C" },
+        ])
+      ).toMatchObject([7, 10, 12, 13, 14]);
+    });
+  });
+
+  it("Sort an array of integers when some integers are the same", () => {
     expect(
       sortCards([
+        { value: 'Q', suit: 'H' },
+        { value: 'A', suit: 'D' },
+        { value: 'A', suit: 'H' },
+        { value: 'Q', suit: 'C' },
+        { value: '5', suit: 'D' }
+      ])
+    ).toMatchObject([ 5, 12, 12, 14, 14 ]);
+  });
+});
+
+describe("Consecutive order check", () => {
+  it("Consecutive order is false", () => {
+    expect(
+      checkCardsIfConsecutiveOrder([
         { value: "A", suit: "D" },
         { value: "7", suit: "D" },
         { value: "K", suit: "H" },
         { value: "Q", suit: "H" },
         { value: "T", suit: "C" },
       ])
-    ).toMatchObject([7, 10, 12, 13, 14]);
+    ).toEqual(false);
   });
 
-  //check if cards are in consecutive order test
-  it("Sort an array of integers when integers are not the same", () => {
+    it("Consecutive order is true", () => {
+      expect(
+        checkCardsIfConsecutiveOrder([
+          { value: '2', suit: 'H' },
+          { value: '3', suit: 'H' },
+          { value: '4', suit: 'H' },
+          { value: '5', suit: 'H' },
+          { value: '6', suit: 'H' }
+        ])
+      ).toEqual(true);
+    });
+  
+});
+
+describe("Find duplicate elements in an array", () => { 
+  it("Consecutive order is false", () => {
     expect(
-      sortCards([
+      checkCardsIfConsecutiveOrder([
         { value: "A", suit: "D" },
         { value: "7", suit: "D" },
         { value: "K", suit: "H" },
         { value: "Q", suit: "H" },
         { value: "T", suit: "C" },
       ])
-    ).toMatchObject([7, 10, 12, 13, 14]);
+    ).toEqual(false);
   });
 });

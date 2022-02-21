@@ -11,7 +11,7 @@ const {
   fourthHighestCard,
 } = require("./poker");
 
-//this checks the user input, if the input is empty or "",
+//this checks the user input, if the input is empty (""),
 //it then calls the close function which proceeds checking the user inputs
 const prompts = readline.createInterface(process.stdin, process.stdout);
 const inputArray = [];
@@ -35,15 +35,17 @@ prompts.on("close", () => {
   hands.map((hand) => {
     let getPlayer1Cards = getCardEquivalent(hand.player1Cards);
     let getPlayer2Cards = getCardEquivalent(hand.player2Cards);
+    let player1 = calculatePlayer1Score(hand);
+    let player2 = calculatePlayer2Score(hand);
 
-    if (calculatePlayer1Score(hand) > calculatePlayer2Score(hand)) {
+    if (player1 > player2 ) {
       player1WinCount.push(1);
       player2WinCount.push(0);
-    } else if (calculatePlayer1Score(hand) === calculatePlayer2Score(hand)) {
+    } else if (player1 === player2) {
       let getPlayer1NextHighestCard =
-        calculatePlayer1Score(hand) + nextHighestCard(getPlayer1Cards);
+        player1 + nextHighestCard(getPlayer1Cards);
       let getPlayer2NextHighestCard =
-        calculatePlayer2Score(hand) + nextHighestCard(getPlayer2Cards);
+        player2 + nextHighestCard(getPlayer2Cards);
       if (getPlayer1NextHighestCard > getPlayer2NextHighestCard) {
         player1WinCount.push(1);
         player2WinCount.push(0);
@@ -80,18 +82,17 @@ prompts.on("close", () => {
       player1WinCount.push(0);
     }
 
-    const initialValue = 0;
-    const player1NumWins = player1WinCount.reduce((previousValue, currentValue) =>
-    previousValue + currentValue, initialValue
-  );
+    const player1NumWins = player1WinCount.reduce(
+      (previousValue, currentValue) => previousValue + currentValue,
+      0
+    );
 
-    const player2NumWins = player2WinCount.reduce((previousValue, currentValue) =>
-      previousValue + currentValue, initialValue
+    const player2NumWins = player2WinCount.reduce(
+      (previousValue, currentValue) => previousValue + currentValue,
+      0
     );
 
     console.log(`Player 1: ${player1NumWins} hands`);
     console.log(`Player 2: ${player2NumWins} hands`);
-  
   });
- 
 });

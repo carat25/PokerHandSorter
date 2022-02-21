@@ -65,36 +65,47 @@ const player2ScoreCard = [];
 let player2Score;
 
 const calculatePlayer1Score = (hand) => {
+  let pairValue1 = findDuplicateItems(getCardEquivalent(hand.player1Cards));
+  let getCardValue = getCardEquivalent(hand.player1Cards);
+  let fourOfAKindCard =
+    Object.keys(pairValue1)[Object.values(pairValue1).indexOf(4)];
+  //from the list of duplicate items array, get the key or card value that has a value of 3
+  let threeOfAKindCard =
+    Object.keys(pairValue1)[Object.values(pairValue1).indexOf(3)];
+  let pairCard = Object.keys(pairValue1)[Object.values(pairValue1).indexOf(2)];
+  let duplicates = Object.keys(pairValue1).filter(
+    (value) => pairValue1[value] === 2
+  );
+
   if (isARoyalFlush(hand.player1Cards)) {
     player1Score = combination.isARoyalFlush;
     player1ScoreCard.push(combination.royalFlush);
   } else if (isStraightFlush(hand.player1Cards)) {
-    player1Score = combination.straightFlush;
+    player1Score = combination.straightFlush + isAHighCard(getCardValue);
     player1ScoreCard.push(player1Score);
   } else if (isFourOfAKind(hand.player1Cards)) {
-    player1Score = combination.fourOfAKind;
+      player1Score = combination.fourOfAKind + parseInt(fourOfAKindCard);
     player1ScoreCard.push(player1Score);
   } else if (isFullHouse(hand.player1Cards)) {
-    player1Score = combination.fullHouse;
+    player1Score = combination.fullHouse + parseInt(threeOfAKindCard);
     player1ScoreCard.push(player1Score);
   } else if (isAFlush(hand.player1Cards)) {
-    player1Score = combination.flush;
+    player1Score = combination.flush + isAHighCard(getCardValue);
     player1ScoreCard.push(player1Score);
   } else if (isAStraight(hand.player1Cards)) {
-    player1Score = combination.straight;
+    player1Score = combination.straight + isAHighCard(getCardValue);
     player1ScoreCard.push(player1Score);
   } else if (isThreeOfAKind(hand.player1Cards)) {
-    player1Score = combination.threeOfAKind;
+    player1Score = combination.threeOfAKind + parseInt(threeOfAKindCard);
     player1ScoreCard.push(player1Score);
   } else if (isTwoPairs(hand.player1Cards)) {
-    player1Score = combination.twoPairs;
+    player1Score =
+      combination.twoPairs + parseInt(sumOfDuplicatedItems(duplicates));
     player1ScoreCard.push(player1Score);
   } else if (isAPair(hand.player1Cards)) {
-    let pairValue1 = findDuplicateItems(getCardEquivalent(hand.player1Cards));
-    player1Score = combination.pair + parseInt(pairValue1);
+    player1Score = combination.pair + parseInt(pairCard);
     player1ScoreCard.push(player1Score);
   } else {
-    let getCardValue = getCardEquivalent(hand.player1Cards);
     player1Score = isAHighCard(getCardValue);
     player1ScoreCard.push(player1Score);
   }
@@ -102,36 +113,47 @@ const calculatePlayer1Score = (hand) => {
 };
 
 const calculatePlayer2Score = (hand) => {
+  let pairValue2 = findDuplicateItems(getCardEquivalent(hand.player2Cards));
+  let getCardValue = getCardEquivalent(hand.player2Cards);
+  let fourOfAKindCard =
+    Object.keys(pairValue2)[Object.values(pairValue2).indexOf(4)];
+  //from the list of duplicate items array, get the key or card value that has a value of 3
+  let threeOfAKindCard =
+    Object.keys(pairValue2)[Object.values(pairValue2).indexOf(3)];
+  let pairCard = Object.keys(pairValue2)[Object.values(pairValue2).indexOf(2)];
+  let duplicates = Object.keys(pairValue2).filter(
+    (value) => pairValue2[value] === 2
+  );
+
   if (isARoyalFlush(hand.player2Cards)) {
     player2Score = combination.royalFlush;
     player2ScoreCard.push(combination.royalFlush);
   } else if (isStraightFlush(hand.player2Cards)) {
-    player2Score = combination.straightFlush;
+    player2Score = combination.straightFlush + isAHighCard(getCardValue);
     player2ScoreCard.push(player2Score);
   } else if (isFourOfAKind(hand.player2Cards)) {
-    player2Score = combination.fourOfAKind;
+    player2Score = combination.fourOfAKind + parseInt(fourOfAKindCard);
     player2ScoreCard.push(player2Score);
   } else if (isFullHouse(hand.player2Cards)) {
-    player2Score = combination.fullHouse;
+    player2Score = combination.fullHouse + parseInt(threeOfAKindCard);
     player2ScoreCard.push(player2Score);
   } else if (isAFlush(hand.player2Cards)) {
-    player2Score = combination.flush;
+    player2Score = combination.flush + isAHighCard(getCardValue);
     player2ScoreCard.push(player2Score);
   } else if (isAStraight(hand.player2Cards)) {
-    player2Score = combination.straight;
+    player2Score = combination.straight + isAHighCard(getCardValue);
     player2ScoreCard.push(player2Score);
   } else if (isThreeOfAKind(hand.player2Cards)) {
-    player2Score = combination.threeOfAKind;
+    player2Score = combination.threeOfAKind + parseInt(threeOfAKindCard);
     player2ScoreCard.push(player2Score);
   } else if (isTwoPairs(hand.player2Cards)) {
-    player2Score = combination.twoPairs;
+    player2Score =
+      combination.twoPairs + parseInt(sumOfDuplicatedItems(duplicates));
     player2ScoreCard.push(player2Score);
   } else if (isAPair(hand.player2Cards)) {
-    let pairValue2 = findDuplicateItems(getCardEquivalent(hand.player2Cards));
-    player2Score = combination.pair + parseInt(pairValue2);
+    player2Score = combination.pair + parseInt(pairCard);
     player2ScoreCard.push(player2Score);
   } else {
-    let getCardValue = getCardEquivalent(hand.player2Cards);
     player2Score = isAHighCard(getCardValue);
     player2ScoreCard.push(player2Score);
   }
@@ -277,7 +299,7 @@ const isAHighCard = (cards) => {
   //find the highest number within the card array and declare the highest card
   return cards.reduce((a, b) => {
     return Math.max(a, b);
-  }, -Infinity);
+  });
 };
 
 //find the next highest value in the card array
@@ -351,21 +373,20 @@ const getCardEquivalent = (cards) => {
 
 //function to sort the cards array in ascending order
 const sortCards = (cards) => {
-  console.log("I AM CARDS", cards);
-  let x = getCardEquivalent(cards).sort((a, b) => {
+  return getCardEquivalent(cards).sort((a, b) => {
     return a - b;
-    // return getCardEquivalent(cards).sort((a, b) => {
-
-    // return a - b;
   });
-  console.log("I AM NUMBER", x);
-  return x;
 };
 
 //function to check if cards are in consecutive order
 const checkCardsIfConsecutiveOrder = (cards) => {
+  //first, we get the array of card values then sort them
+  //e.g.[ 3, 7, 8, 9, 9 ]
   let sortedCards = sortCards(cards);
 
+  //second, we map through the sorted cards array and starting from index 1 (2nd item),
+  //we get the difference of the 2nd item and the first item and return the value to the new array
+  //e.g. [ 4, 1, 1, 0 ]
   let newArray = sortedCards.slice(1).map((item, index) => {
     let newItem = item - sortedCards[index];
     if (newItem === 1) {
@@ -375,7 +396,9 @@ const checkCardsIfConsecutiveOrder = (cards) => {
     }
   });
 
-  //check that the elements in an array are equal
+  //check that the elements in an array are all 1
+  //if all elements are 1, it means they are in consecutive order,
+  //in our e.g. it is FALSE
   return newArray.every((value) => {
     return value === newArray[0];
   });
@@ -383,11 +406,23 @@ const checkCardsIfConsecutiveOrder = (cards) => {
 
 //function to find the duplicate values in the cards array
 const findDuplicateItems = (cards) => {
-  let duplicate = cards.filter(
-    (item, index, arr) => arr.indexOf(item) !== index
+  
+  const pairCount = _.countBy(cards, (value) => value);
+
+  return pairCount;
+  //   return cards.filter((item, index) => cards.indexOf(item) !== index);
+};
+
+const sumOfDuplicatedItems = (cards) => {
+  //converts the string array to integers
+  let convertToInt = cards.map((elements) => parseInt(elements));
+  //calculate the sum of the int array
+  let sum = convertToInt.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    0
   );
 
-  return duplicate;
+  return sum;
 };
 
 module.exports = {
@@ -403,4 +438,5 @@ module.exports = {
   getCardValues,
   sortCards,
   checkCardsIfConsecutiveOrder,
+  findDuplicateItems,
 };
