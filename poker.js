@@ -1,33 +1,5 @@
 const _ = require("lodash");
-
-const listOfCards = {
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-  9: 9,
-  T: 10,
-  J: 11,
-  Q: 12,
-  K: 13,
-  A: 14,
-};
-
-const combination = {
-  highCard: 100,
-  pair: 200,
-  twoPairs: 400,
-  threeOfAKind: 600,
-  straight: 800,
-  flush: 1000,
-  fullHouse: 1200,
-  fourOfAKind: 1400,
-  straightFlush: 1600,
-  royalFlush: 2000,
-};
+const { listOfCards, combination } = require("./structure");
 
 const processHands = (inputsArr) => {
   /**
@@ -43,12 +15,11 @@ const processHands = (inputsArr) => {
   ]
      */
   return inputsArr.map((arr) => {
-    const splitArr = arr.split(" ").map((element) => {
-      return {
-        //split the user input (e.g. 9H) and set first string to be "value" and second string to be the "suit"
-        value: element.substring(0, 1),
-        suit: element.substring(1, 2),
-      };
+    const cardDelimiter = " ";
+    //split the user input (e.g. 9H) and set first string to be "value" and second string to be the "suit"
+    const splitArr = arr.split(cardDelimiter).map((element) => {
+      const [value, suit] = element.split("");
+      return { value, suit };
     });
     //there's always 10 cards in each data input. Here we are dividing the data to 2 groups,
     //first half belongs to player 1 and second half belongs to player 2
@@ -59,105 +30,56 @@ const processHands = (inputsArr) => {
   });
 };
 
-const player1ScoreCard = [];
-let player1Score;
-const player2ScoreCard = [];
-let player2Score;
+const playerScoreCard = [];
+let playerScore;
 
-const calculatePlayer1Score = (hand) => {
-  let pairValue1 = findDuplicateItems(getCardEquivalent(hand.player1Cards));
-  let getCardValue = getCardEquivalent(hand.player1Cards);
+const calculatePlayerScore = (cards) => {
+  let pairValue = findDuplicateItems(getCardEquivalent(cards));
+  let getCardValue = getCardEquivalent(cards);
   let fourOfAKindCard =
-    Object.keys(pairValue1)[Object.values(pairValue1).indexOf(4)];
+    Object.keys(pairValue)[Object.values(pairValue).indexOf(4)];
   //from the list of duplicate items array, get the key or card value that has a value of 3
   let threeOfAKindCard =
-    Object.keys(pairValue1)[Object.values(pairValue1).indexOf(3)];
-  let pairCard = Object.keys(pairValue1)[Object.values(pairValue1).indexOf(2)];
-  let duplicates = Object.keys(pairValue1).filter(
-    (value) => pairValue1[value] === 2
+    Object.keys(pairValue)[Object.values(pairValue).indexOf(3)];
+  let pairCard = Object.keys(pairValue)[Object.values(pairValue).indexOf(2)];
+  let duplicates = Object.keys(pairValue).filter(
+    (value) => pairValue[value] === 2
   );
 
-  if (isARoyalFlush(hand.player1Cards)) {
-    player1Score = combination.isARoyalFlush;
-    player1ScoreCard.push(combination.royalFlush);
-  } else if (isStraightFlush(hand.player1Cards)) {
-    player1Score = combination.straightFlush + isAHighCard(getCardValue);
-    player1ScoreCard.push(player1Score);
-  } else if (isFourOfAKind(hand.player1Cards)) {
-      player1Score = combination.fourOfAKind + parseInt(fourOfAKindCard);
-    player1ScoreCard.push(player1Score);
-  } else if (isFullHouse(hand.player1Cards)) {
-    player1Score = combination.fullHouse + parseInt(threeOfAKindCard);
-    player1ScoreCard.push(player1Score);
-  } else if (isAFlush(hand.player1Cards)) {
-    player1Score = combination.flush + isAHighCard(getCardValue);
-    player1ScoreCard.push(player1Score);
-  } else if (isAStraight(hand.player1Cards)) {
-    player1Score = combination.straight + isAHighCard(getCardValue);
-    player1ScoreCard.push(player1Score);
-  } else if (isThreeOfAKind(hand.player1Cards)) {
-    player1Score = combination.threeOfAKind + parseInt(threeOfAKindCard);
-    player1ScoreCard.push(player1Score);
-  } else if (isTwoPairs(hand.player1Cards)) {
-    player1Score =
+  if (isARoyalFlush(cards)) {
+    playerScore = combination.isARoyalFlush;
+    playerScoreCard.push(combination.royalFlush);
+  } else if (isStraightFlush(cards)) {
+    playerScore = combination.straightFlush + isAHighCard(getCardValue);
+    playerScoreCard.push(playerScore);
+  } else if (isFourOfAKind(cards)) {
+    playerScore = combination.fourOfAKind + parseInt(fourOfAKindCard);
+    playerScoreCard.push(playerScore);
+  } else if (isFullHouse(cards)) {
+    playerScore = combination.fullHouse + parseInt(threeOfAKindCard);
+    playerScoreCard.push(playerScore);
+  } else if (isAFlush(cards)) {
+    playerScore = combination.flush + isAHighCard(getCardValue);
+    playerScoreCard.push(playerScore);
+  } else if (isAStraight(cards)) {
+    playerScore = combination.straight + isAHighCard(getCardValue);
+    playerScoreCard.push(playerScore);
+  } else if (isThreeOfAKind(cards)) {
+    playerScore = combination.threeOfAKind + parseInt(threeOfAKindCard);
+    playerScoreCard.push(playerScore);
+  } else if (isTwoPairs(cards)) {
+    playerScore =
       combination.twoPairs + parseInt(sumOfDuplicatedItems(duplicates));
-    player1ScoreCard.push(player1Score);
-  } else if (isAPair(hand.player1Cards)) {
-    player1Score = combination.pair + parseInt(pairCard);
-    player1ScoreCard.push(player1Score);
+    playerScoreCard.push(playerScore);
+  } else if (isAPair(cards)) {
+    playerScore = combination.pair + parseInt(pairCard);
+    playerScoreCard.push(playerScore);
   } else {
-    player1Score = isAHighCard(getCardValue);
-    player1ScoreCard.push(player1Score);
+    playerScore = isAHighCard(getCardValue);
+    playerScoreCard.push(playerScore);
   }
-  return player1Score;
-};
-
-const calculatePlayer2Score = (hand) => {
-  let pairValue2 = findDuplicateItems(getCardEquivalent(hand.player2Cards));
-  let getCardValue = getCardEquivalent(hand.player2Cards);
-  let fourOfAKindCard =
-    Object.keys(pairValue2)[Object.values(pairValue2).indexOf(4)];
-  //from the list of duplicate items array, get the key or card value that has a value of 3
-  let threeOfAKindCard =
-    Object.keys(pairValue2)[Object.values(pairValue2).indexOf(3)];
-  let pairCard = Object.keys(pairValue2)[Object.values(pairValue2).indexOf(2)];
-  let duplicates = Object.keys(pairValue2).filter(
-    (value) => pairValue2[value] === 2
-  );
-
-  if (isARoyalFlush(hand.player2Cards)) {
-    player2Score = combination.royalFlush;
-    player2ScoreCard.push(combination.royalFlush);
-  } else if (isStraightFlush(hand.player2Cards)) {
-    player2Score = combination.straightFlush + isAHighCard(getCardValue);
-    player2ScoreCard.push(player2Score);
-  } else if (isFourOfAKind(hand.player2Cards)) {
-    player2Score = combination.fourOfAKind + parseInt(fourOfAKindCard);
-    player2ScoreCard.push(player2Score);
-  } else if (isFullHouse(hand.player2Cards)) {
-    player2Score = combination.fullHouse + parseInt(threeOfAKindCard);
-    player2ScoreCard.push(player2Score);
-  } else if (isAFlush(hand.player2Cards)) {
-    player2Score = combination.flush + isAHighCard(getCardValue);
-    player2ScoreCard.push(player2Score);
-  } else if (isAStraight(hand.player2Cards)) {
-    player2Score = combination.straight + isAHighCard(getCardValue);
-    player2ScoreCard.push(player2Score);
-  } else if (isThreeOfAKind(hand.player2Cards)) {
-    player2Score = combination.threeOfAKind + parseInt(threeOfAKindCard);
-    player2ScoreCard.push(player2Score);
-  } else if (isTwoPairs(hand.player2Cards)) {
-    player2Score =
-      combination.twoPairs + parseInt(sumOfDuplicatedItems(duplicates));
-    player2ScoreCard.push(player2Score);
-  } else if (isAPair(hand.player2Cards)) {
-    player2Score = combination.pair + parseInt(pairCard);
-    player2ScoreCard.push(player2Score);
-  } else {
-    player2Score = isAHighCard(getCardValue);
-    player2ScoreCard.push(player2Score);
-  }
-  return player2Score;
+  console.log(playerScore);
+  return playerScore;
 };
 
 const isARoyalFlush = (cards) => {
@@ -171,11 +93,7 @@ const isARoyalFlush = (cards) => {
   let checkCardValues = royalCards.every((item) => getCards.includes(item));
 
   //if suitsCount = 5 and cards on Hand = royalCards, then it is a royal flush
-  if (isAFlush(cards) && checkCardValues === true) {
-    return true;
-  } else {
-    return false;
-  }
+  return isAFlush(cards) && checkCardValues === true;
 };
 
 const isStraightFlush = (cards) => {
@@ -183,11 +101,7 @@ const isStraightFlush = (cards) => {
    * All five cards in consecutive value order, with the same suit
    */
 
-  if (isAFlush(cards) && checkCardsIfConsecutiveOrder(cards) === true) {
-    return true;
-  } else {
-    return false;
-  }
+  return isAFlush(cards) && checkCardsIfConsecutiveOrder(cards) === true;
 };
 
 const isFourOfAKind = (cards) => {
@@ -199,11 +113,8 @@ const isFourOfAKind = (cards) => {
   const fourCount = cardCount(cards);
 
   //check if one of the card values count up to 4
-  if (Object.values(fourCount).includes(4)) {
-    return true;
-  } else {
-    return false;
-  }
+
+  return Object.values(fourCount).includes(4);
 };
 
 const isFullHouse = (cards) => {
@@ -212,11 +123,7 @@ const isFullHouse = (cards) => {
    */
 
   //check if one of the card values count up to 3 and the rest of the cards is a pair
-  if (isThreeOfAKind(cards) && isAPair(cards)) {
-    return true;
-  } else {
-    return false;
-  }
+  return isThreeOfAKind(cards) && isAPair(cards);
 };
 
 const isAFlush = (cards) => {
@@ -226,11 +133,7 @@ const isAFlush = (cards) => {
 
   const fiveSuits = suitsCount(cards);
 
-  if (Object.values(fiveSuits).includes(5)) {
-    return true;
-  } else {
-    return false;
-  }
+  return Object.values(fiveSuits).includes(5);
 };
 
 const isAStraight = (cards) => {
@@ -238,11 +141,7 @@ const isAStraight = (cards) => {
    * All five cards in consecutive value order
    */
 
-  if (checkCardsIfConsecutiveOrder(cards) === true) {
-    return true;
-  } else {
-    return false;
-  }
+  return checkCardsIfConsecutiveOrder(cards) === true;
 };
 
 const isThreeOfAKind = (cards) => {
@@ -252,11 +151,7 @@ const isThreeOfAKind = (cards) => {
 
   const threeCount = cardCount(cards);
 
-  if (Object.values(threeCount).includes(3)) {
-    return true;
-  } else {
-    return false;
-  }
+  return Object.values(threeCount).includes(3);
 };
 
 const isTwoPairs = (cards) => {
@@ -270,11 +165,7 @@ const isTwoPairs = (cards) => {
 
   const pairCount = _.countBy(getValues, (value) => value);
 
-  if (Object.values(pairCount).includes(2)) {
-    return true;
-  } else {
-    return false;
-  }
+  return Object.values(pairCount).includes(2);
 };
 
 const isAPair = (cards) => {
@@ -284,11 +175,7 @@ const isAPair = (cards) => {
 
   const pairCount = cardCount(cards);
   //if pairCount = 2, then declare a pair
-  if (Object.values(pairCount).includes(2)) {
-    return true;
-  } else {
-    return false;
-  }
+  return Object.values(pairCount).includes(2);
 };
 
 const isAHighCard = (cards) => {
@@ -305,9 +192,11 @@ const isAHighCard = (cards) => {
 //find the next highest value in the card array
 const nextHighestCard = (cards) => {
   let highestNum = isAHighCard(cards);
+
   let nextHighestNumArr = cards.filter((value) => {
     return value !== highestNum;
   });
+
   let nextHighestNum = isAHighCard(nextHighestNumArr);
 
   return nextHighestNum;
@@ -316,11 +205,15 @@ const nextHighestCard = (cards) => {
 //find the third highest value in the card array
 const thirdHighestCard = (cards) => {
   let highestNum = isAHighCard(cards);
+
   let nextHighestNum = nextHighestCard(cards);
+
   let thirdHighestNumArr = cards.filter((value) => {
     return value !== highestNum && value !== nextHighestNum;
   });
+
   let thirdHighestNum = isAHighCard(thirdHighestNumArr);
+
   return thirdHighestNum;
 };
 
@@ -406,7 +299,6 @@ const checkCardsIfConsecutiveOrder = (cards) => {
 
 //function to find the duplicate values in the cards array
 const findDuplicateItems = (cards) => {
-  
   const pairCount = _.countBy(cards, (value) => value);
 
   return pairCount;
@@ -416,6 +308,7 @@ const findDuplicateItems = (cards) => {
 const sumOfDuplicatedItems = (cards) => {
   //converts the string array to integers
   let convertToInt = cards.map((elements) => parseInt(elements));
+
   //calculate the sum of the int array
   let sum = convertToInt.reduce(
     (previousValue, currentValue) => previousValue + currentValue,
@@ -427,16 +320,26 @@ const sumOfDuplicatedItems = (cards) => {
 
 module.exports = {
   processHands,
-  calculatePlayer1Score,
-  calculatePlayer2Score,
-  getCardEquivalent,
+  calculatePlayerScore,
+  isARoyalFlush,
+  isStraightFlush,
+  isFourOfAKind,
+  isFullHouse,
+  isAFlush,
+  isAStraight,
+  isThreeOfAKind,
+  isTwoPairs,
+  isAPair,
+  isAHighCard,
   nextHighestCard,
   thirdHighestCard,
   fourthHighestCard,
   suitsCount,
   cardCount,
   getCardValues,
+  getCardEquivalent,
   sortCards,
   checkCardsIfConsecutiveOrder,
   findDuplicateItems,
+  sumOfDuplicatedItems,
 };
