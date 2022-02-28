@@ -8,8 +8,8 @@ const {
   nextHighestCard,
   thirdHighestCard,
   fourthHighestCard,
-} = require("./poker");
-const { Scores } = require("./structure");
+} = require("./utils/poker");
+const { Scores } = require("./structure/structure");
 
 //this checks the user input, if the input is empty (""),
 //it then calls the close function which proceeds checking the user inputs
