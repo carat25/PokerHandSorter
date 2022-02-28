@@ -1,0 +1,19 @@
+*other test data I used to test matching combination*
+
+2H 3H 4H 5H 6H TD JD QD KD AD  (royal flush)
+
+2H 3H 4H 5H 6H 9D 6D 8D 7D 5D (straight flush)
+
+2H 2D 2S 2C 9H 9C 8H 8D 8C 8S (four of a kind)
+
+9S TS TC 9D 9H 2S 2C 5H 2D 5D (full house)
+
+6S 5S 4S TS 8S 5H TH KH 3H AH (flush)
+
+2H 3D 4S 5C 6H 7C 9D 8D TC JC (straight)
+
+AH AD AS JC 9H 9C 9D 9D 7C 3C (three of a kind)
+
+TH QC 8D QH TS QD KH QS 2H 2S (TWO PAIRS)
+
+5D 7S KD 5S AH TH 9S 8C 8H 4H (PAIR)

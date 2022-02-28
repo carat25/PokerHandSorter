@@ -1,0 +1,34 @@
+{
+  "name": "poker_hand_sorter",
+  "version": "1.0.0",
+  "description": "A CLI program for poker game",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carat25/Poker_Hand_Sorter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "hello": "bin/index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/carat25/Poker_Hand_Sorter/issues"
+  },
+  "homepage": "https://github.com/carat25/Poker_Hand_Sorter#readme",
+  "dependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "commander": "^9.0.0",
+    "lodash": "^4.17.21",
+    "yargs": "13.2"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  }
+}
