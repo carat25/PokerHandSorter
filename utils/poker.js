@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { listOfCards, combination } = require("./structure");
+const { listOfCards, combination } = require("../structure/structure");
 
 const processHands = (inputsArr) => {
   /**
